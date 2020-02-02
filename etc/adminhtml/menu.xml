@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="MRYM_SalesManager::config" title="Sales Manager" translate="title"
+             module="MRYM_SalesManager" parent="Magento_Backend::marketing" sortOrder="10"
+             resource="MRYM_SalesManager::config"/>
+
+        <add id="MRYM_SalesManager::manager" title="Managers" translate="title" sortOrder="10"
+             module="MRYM_SalesManager" parent="MRYM_SalesManager::config" action="sales_manager/manager/"
+             resource="MRYM_SalesManager::manager"/>
+    </menu>
+</config>

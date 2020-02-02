@@ -1,0 +1,104 @@
+<?php
+/**
+ * @var \MRYM\SalesManager\Block\Product\View $block
+*/
+$objectManagerInstance = \Magento\Framework\App\ObjectManager::getInstance();
+$url = $objectManagerInstance->get('Magento\Framework\UrlInterface');
+?>
+<button type="button" class="action primary" id="sales-tab-button"><?php echo __('Contact Sales Team'); ?></button>
+
+<div id="popup-modal">
+    <form class="form create account form-create-account" data-mage-init='{"validation": {}}' action="<?= $block->escapeUrl($block->getPostActionUrl()) ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
+        <?= /* @noEscape */ $block->getBlockHtml('formkey'); ?>
+        <fieldset class="fieldset create info">
+            <legend class="legend"><span><?= $block->escapeHtml(__('Personal Information')) ?></span></legend><br>
+            <input type="hidden" name="redirect_url" value="<?= $block->escapeUrl($url->getCurrentUrl()); ?>">
+            <div class="field region required">
+                <label for="region_id" class="label"><span><?= __('Region') ?></span></label>
+                <div class="control">
+                    <select id="region_id" name="region_id" title="<?= __('Region') ?>" class="validate-select region_id" style="display:none;">
+                        <option value=""><?= $block->escapeHtml(__('Please select a region, state or province.')) ?></option>
+                    </select>
+                    <input type="text" id="region" name="region" value="<?= $block->escapeHtml($block->getRegion()) ?>"
+                           class="input-text <?= $block->escapeHtmlAttr($this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('region')) ?>" style="display:none;">
+                </div>
+            </div>
+            <div class="field country required">
+                <label for="country" class="label"><span><?= __('Country')?></span></label>
+                <div class="control">
+                    <?= $block->getCountryHtmlSelect() ?>
+                </div>
+            </div>
+            <div class="field message">
+                <label for="message" class="label"><span><?= __('Message')?></span></label>
+                <div class="control">
+                    <textarea name="message" id="message" data-validate='{"required":true}' class="input-text" title="<?= __('Message')?>"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Contact Sales Team',
+                buttons: [{
+                    text: $.mage.__('Send'),
+                    class: 'action primary',
+                    click: function () {
+                        $('#form-validate').submit();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+
+            $('#sales-tab-button').on('click', function () {
+                $('#popup-modal').modal('openModal');
+                var headerHeight = $('.header-container .header').outerHeight();
+                var marginModal = parseInt(headerHeight) + 20;
+                $('.modal-popup .modal-inner-wrap').css('margin-top', marginModal + 'px');
+            });
+
+
+        }
+    );
+</script>
+
+
+<script type="text/x-magento-init">
+    {
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": <?= /* @noEscape */ $block->getConfig('general/region/display_all') ? 'true' : 'false' ?>,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#form-validate",
+                "regionJson": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                "defaultRegion": "<?= (int) $block->getFormData()->getRegionId() ?>",
+                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        ".field.password": {
+            "passwordStrengthIndicator": {
+                "formSelector": "form.form-create-account"
+            }
+        }
+    }
+</script>

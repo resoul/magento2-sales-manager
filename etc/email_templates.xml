@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../Magento/Email/etc/email_templates.xsd">
+    <template id="sales_manager_email_template" label="Sales Manager" file="new_request.html" type="html"
+              module="MRYM_SalesManager" area="frontend"/>
+</config>
